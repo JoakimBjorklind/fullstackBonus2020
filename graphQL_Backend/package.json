@@ -1,0 +1,31 @@
+{
+  "name": "fullstackbonus2020",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoakimBjorklind/fullstackBonus2020.git"
+  },
+  "keywords": [
+    "001"
+  ],
+  "author": "Joakim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JoakimBjorklind/fullstackBonus2020/issues"
+  },
+  "homepage": "https://github.com/JoakimBjorklind/fullstackBonus2020#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "apollo-server": "^2.19.0",
+    "graphql": "^15.4.0"
+  }
+}

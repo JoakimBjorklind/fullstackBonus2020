@@ -28,3 +28,14 @@ query {
   }
 }
 `
+// leaving out genres, cuz the exercise said so...
+export const ALL_BOOKS = gql`
+query {
+  allBooks {
+    title 
+    published
+    author
+    id
+  }
+}
+`

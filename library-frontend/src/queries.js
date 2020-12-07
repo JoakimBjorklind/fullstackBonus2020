@@ -39,3 +39,19 @@ query {
   }
 }
 `
+
+export const CREATE_BOOK = gql`
+  mutation createBook($title: String!, $author: String!, $convertToIntPublished: Int!, $genres: [String!]!) {
+    addBook(
+      title: $title,
+      author: $author,
+      published: $convertToIntPublished,
+      genres: $genres
+    ) {
+      title
+      author
+      published
+      genres
+    }
+  }
+`

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { ALL_AUTHORS, UPDATE_AUTHOR } from '../queries'
-//import AuthorForm from './AuthorForm'
 
 const Authors = (props) => {
 
@@ -29,7 +28,6 @@ const Authors = (props) => {
 
   const submit = async (event) => {
     event.preventDefault()
-    //const bornToInt = Number(born)
 
      updateAuthor({
         variables: { name, born: parseInt(born) }

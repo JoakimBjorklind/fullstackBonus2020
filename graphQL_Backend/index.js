@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server')
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
 const Author = require('./models/author')
@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 
 
-let authors = [
+/*let authors = [
   {
     name: 'Robert Martin',
     id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
@@ -44,7 +44,7 @@ let authors = [
 /*
  * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
  * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
-*/
+*
 
 let books = [
   {
@@ -96,7 +96,7 @@ let books = [
     id: "afa5de04-344d-11e9-a414-719c6709cf3e",
     genres: ['classic', 'revolution']
   },
-]
+]*/
 
 const typeDefs = gql`
   type Book {
@@ -137,9 +137,12 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: () => Book.find({}).populate('author'),
-    /*allBooks: (root, args) => {
-      if(!args.author && !args.genre) {
+    //allBooks: () => Book.find({}).populate('author'),
+    allBooks: async (root, args) => {
+      const kirjat = await Book.find({}).populate('author')
+      return kirjat.filter(boo => (args.author ? boo.author.name === args.author : true) &&
+      (args.genre ? boo.genres.includes(args.genre) : true))
+      /*if(!args.author && !args.genre) {
        return books
       }
       else if (args.genre) {
@@ -147,8 +150,8 @@ const resolvers = {
       }
       else {
         return books.filter(boo => boo.author === args.author)
-      }
-      },*/
+      }*/
+      },
 
     //allAuthors: () => authors
     allAuthors: () => Author.find({}) 
@@ -185,8 +188,23 @@ const resolvers = {
 
       const book = new Book({ ...args, author: author })
       //author.bookCount = author.bookCount+1
-      await author.save()
-      return book.save()
+      //await author.save()
+      //return book.save()
+      try {
+        await author.save()
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args,
+        })
+      }
+      try {
+        await book.save()
+      } catch (e) {
+        throw new UserInputError(e.message, {
+          invalidArgs: args,
+        })
+      }
+      return book.populate('author')
     },
     editAuthor: async (root, args) => {
       //const author = authors.find(aut => aut.name === args.name)
